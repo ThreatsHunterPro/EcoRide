@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./BackEnd
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=${PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - MONGO_URI=${MONGO_URI}
+
+  frontend:
+    build: ./FrontEnd
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
