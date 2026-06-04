@@ -1,7 +1,43 @@
 {
-  "name": "ecoride-backend",
+  "name": "backend",
   "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "echo 'BackEnd initialisé !'"
+    "dev": "nodemon -r dotenv/config src/server.js",
+    "start": "node -r dotenv/config src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "seed:roles": "node -r dotenv/config scripts/seeds/roles.seed.js",
+    "seed:brands": "node -r dotenv/config scripts/seeds/brands.seed.js",
+    "seed:configurations": "node -r dotenv/config scripts/seeds/configurations.seed.js",
+    "seed:parameters": "node -r dotenv/config scripts/seeds/parameters.seed.js",
+    "seed:users": "node -r dotenv/config scripts/seeds/users.seed.js",
+    "seed:cars": "node -r dotenv/config scripts/seeds/cars.seed.js",
+    "seed:trips": "node -r dotenv/config scripts/seeds/trips.seed.js",
+    "seed:bookings": "node -r dotenv/config scripts/seeds/bookings.seed.js",
+    "seed:reviews": "node -r dotenv/config scripts/seeds/reviews.seed.js",
+    "seed:all": "npm run seed:roles && npm run seed:brands && npm run seed:users && npm run seed:configurations && npm run seed:parameters && npm run seed:cars && npm run seed:trips && npm run seed:bookings && npm run seed:reviews",
+    "db:count": "node -r dotenv/config scripts/count.db.js",
+    "db:clear": "node -r dotenv/config scripts/clear.db.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "@supabase/supabase-js": "^2.93.2",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11",
+    "vitest": "^4.1.8"
   }
 }

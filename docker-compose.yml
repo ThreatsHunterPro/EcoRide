@@ -5,11 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
-    environment:
-      - PORT=${PORT}
-      - JWT_SECRET=${JWT_SECRET}
-      - SUPABASE_URL=${SUPABASE_URL}
-      - MONGO_URI=${MONGO_URI}
+    env_file:
+      - ./BackEnd/.env
     volumes:
       - ./BackEnd:/app
       - /app/node_modules 
@@ -22,6 +19,8 @@ services:
       - "5173:5173"
     depends_on:
       - backend
+    env_file:
+      - ./FrontEnd/.env.development
     volumes:
       - ./FrontEnd:/app
-      - /app/node_modules 
+      - /app/node_modules
