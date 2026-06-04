@@ -10,6 +10,9 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - SUPABASE_URL=${SUPABASE_URL}
       - MONGO_URI=${MONGO_URI}
+    volumes:
+      - ./BackEnd:/app
+      - /app/node_modules 
 
   frontend:
     build:
@@ -19,3 +22,6 @@ services:
       - "5173:5173"
     depends_on:
       - backend
+    volumes:
+      - ./FrontEnd:/app
+      - /app/node_modules 
