@@ -3,6 +3,6 @@
     "name": "ecoride-frontend",
     "version": "1.0.0",
     "scripts": {
-      "dev": "echo 'FrontEnd initialisé !'"
+      "dev": "vite --host"
     }
   }

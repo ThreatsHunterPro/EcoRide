@@ -1,8 +1,8 @@
-version: '3.8'
-
 services:
   backend:
-    build: ./BackEnd
+    build:
+      context: ./BackEnd
+      dockerfile: Dockerfile
     ports:
       - "3001:3001"
     environment:
@@ -12,7 +12,9 @@ services:
       - MONGO_URI=${MONGO_URI}
 
   frontend:
-    build: ./FrontEnd
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
     ports:
       - "5173:5173"
     depends_on:

@@ -4,8 +4,6 @@ Bienvenue sur le dépôt du projet **EcoRide**, une application de covoiturage �
 
 Ce projet est réalisé dans le cadre d’une évaluation full-stack (ECF). Il est structuré en **Monorépo**, regroupant au même endroit l'application cliente (Front-End) et l'API de gestion (Back-End) afin de centraliser l'infrastructure et de simplifier le déploiement.
 
----
-
 ## 🛠️ Technologies utilisées
 
 ### Front-end
@@ -28,8 +26,6 @@ Ce projet est réalisé dans le cadre d’une évaluation full-stack (ECF). Il e
 * GitHub
 * NPM / Concurrently
 
----
-
 ## 🔐 Fonctionnalités principales
 
 * Authentification sécurisée avec JWT
@@ -41,8 +37,6 @@ Ce projet est réalisé dans le cadre d’une évaluation full-stack (ECF). Il e
 * Dashboard administrateur (statistiques, gestion utilisateurs)
 * Sécurisation des routes API
 
----
-
 ## 🧱 Architecture du Projet
 
 Le projet applique le principe de **séparation des préoccupations** à travers trois environnements distincts, possédant chacun leur propre fichier `package.json`, basé sur une architecture MVP (Model - View - Presenter) :
@@ -50,8 +44,6 @@ Le projet applique le principe de **séparation des préoccupations** à travers
 * **Racine (`/`) :** Gère l'infrastructure globale (Docker Compose) et permet de lancer simultanément les deux applications en développement.
 * **Back-End (`/BackEnd`) :** API Express autonome (routes, authentification, logique métier et accès aux données).
 * **Front-End (`/FrontEnd`) :** Application React (interface utilisateur, navigation et logique client).
-
----
 
 ## 🗄️ Gestion des données et Tests
 
@@ -63,8 +55,6 @@ Dédié au stockage et à la consultation des logs d'activité de l'administrati
 
 ### Données de test
 Utilisation de la bibliothèque Faker.js pour générer des données réalistes (utilisateurs, trajets) et tester l’application à plus grande échelle.
-
----
 
 ## 🚧 Retour d'expérience et Objectifs
 
@@ -80,15 +70,11 @@ Ces problématiques m’ont permis de renforcer mes compétences en architecture
 * Intégration d'un système de paiement.
 * Déclinaison en application mobile.
 
----
-
 ## 💻 Prérequis
 
 Avant de commencer, assurez-vous d'avoir installé sur votre machine :
 * Node.js (Version 18 recommandée)
 * Docker Desktop (Avec le moteur WSL 2 activé sous Windows)
-
----
 
 ## ⚙️ Configuration des variables d'environnement
 
@@ -98,8 +84,6 @@ PORT=3001
 JWT_SECRET=votre_clef_secrete_jwt
 SUPABASE_URL=votre_url_projet_supabase
 MONGO_URI=votre_uri_connexion_mongodb
-
----
 
 ## 🚀 Procédures de Lancement
 
@@ -113,7 +97,7 @@ docker compose up --build
 ### Sans Docker
 1. Installer l'ensemble des dépendances depuis la racine
 ```txt
- npm run install-all
+ npm install
 ```
 2. Lancer les deux applications en simultané
 ```txt
