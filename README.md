@@ -47,6 +47,13 @@ Le projet applique le principe de **séparation des préoccupations** à travers
 * **Back-End (`/BackEnd`) :** API Express autonome (routes, authentification, logique métier et accès aux données).
 * **Front-End (`/FrontEnd`) :** Application React (interface utilisateur, navigation et logique client).
 
+## 🚀 Déploiement
+Le projet utilise une architecture découplée pour une meilleure scalabilité :
+
+* Front-end : Déployé sur Vercel via l'intégration GitHub.
+* Back-end : Déployé sur Render (Web Service via Docker).
+* Variables d'environnement : Gérées via les interfaces de configuration des plateformes Cloud (aucune donnée sensible dans le dépôt).
+
 ## 🗄️ Gestion des données
 
 ### Supabase (PostgreSQL)
