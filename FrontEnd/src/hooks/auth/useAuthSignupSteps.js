@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useMultiStepForm } from "../Shared/useMultiStepForm";
+import { useMultiStepForm } from "../shared/useMultiStepForm";
 import { useAuth } from "../../hooks/auth/useAuth";
 
 export const useAuthSignupSteps = (onSubmit, setError, initialData = {}) => {

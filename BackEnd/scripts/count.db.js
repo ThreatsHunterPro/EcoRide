@@ -1,34 +1,48 @@
 import { supabase } from "../src/config/supabase.js";
+import { colors } from "../src/utils/colors.js";
+import { connectMongo } from "../src/config/mongo.js"; // Importe ta config
+import Log from "../src/models/log.model.js";         // Importe ton modèle
+import mongoose from "mongoose";
 
-const countAll = async () => {
+export const countAll = async () => {
+    console.log(`${colors.blue}╔══════════════════════════════════════════════════╗`);
+    console.log(`║ 📊 État global (Supabase + MongoDB)              ║`);
+    console.log(`╚══════════════════════════════════════════════════╝${colors.reset}`);
+
+    // 1. Comptage Supabase
     const tables = [
-        'roles',
-        'users',
-        'configurations',
-        'parameters',
-        'brands',
-        'cars',
-        'trips',
-        'bookings',
-        'reviews'
+        'roles', 'users', 'configurations', 'parameters', 
+        'brands', 'cars', 'trips', 'bookings', 'reviews'
     ];
-
-    console.log("-----------------------------------------");
-    console.log("📊 SQL Database Current Status");
-    console.log("-----------------------------------------");
 
     for (const table of tables) {
         const { count, error } = await supabase
             .from(table)
             .select('*', { count: 'exact', head: true });
 
-        if (error) {
-            console.error(`❌ Error on [${table}]:`, error.message);
-        } else {
-            console.log(`> ${table.padEnd(15)}: ${count} rows`);
-        }
+        const rowColor = (count > 0) ? colors.green : colors.yellow;
+        console.log(` ${colors.blue}•${colors.reset} ${table.padEnd(16)} : ${rowColor}${count ?? 0}${colors.reset} lignes (SQL)`);
     }
-    console.log("-----------------------------------------");
+
+    // 2. Comptage MongoDB
+    try {
+        await connectMongo();
+        const logsCount = await Log.countDocuments();
+        const mongoColor = (logsCount > 0) ? colors.green : colors.yellow;
+        console.log(` ${colors.blue}•${colors.reset} ${"logs".padEnd(16)} : ${mongoColor}${logsCount}${colors.reset} docs (NoSQL)`);
+    } catch (err) {
+        console.log(` ${colors.red}• logs             : Erreur de connexion MongoDB${colors.reset}`);
+    } finally {
+        await mongoose.disconnect();
+    }
+
+    console.log(`${colors.blue}╚══════════════════════════════════════════════════╝${colors.reset}\n`);
 };
 
-countAll();
+// Auto-exécution si lancé seul
+if (process.argv[1].endsWith('count.db.js')) {
+    countAll().catch(err => {
+        console.error("Erreur lors du comptage:", err);
+        process.exit(1);
+    });
+}

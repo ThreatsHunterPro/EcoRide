@@ -20,7 +20,7 @@ services:
     depends_on:
       - backend
     env_file:
-      - ./FrontEnd/.env.development
+      - ./FrontEnd/.env
     volumes:
       - ./FrontEnd:/app
       - /app/node_modules

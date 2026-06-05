@@ -1,10 +1,8 @@
 import { fakerFR as faker } from '@faker-js/faker';
 import { supabase } from "../../src/config/supabase.js";
 
-const seedBookings = async () => {
+export const seedBookings = async () => {
     try {
-        console.log("📅 Starting Bookings seed...");
-
         const { data: users } = await supabase.from('users').select('user_id');
         const { data: trips } = await supabase.from('trips').select('trip_id');
 
@@ -41,10 +39,7 @@ const seedBookings = async () => {
 
         const { data, error } = await supabase.from('bookings').insert(bookings).select();
         if (error) throw error;
-        console.log(`✅ ${data.length} bookings created!`);
     } catch (err) {
         console.error("❌ Error seed-bookings:", err.message);
     }
 };
-
-seedBookings();

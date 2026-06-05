@@ -1,9 +1,7 @@
 import { supabase } from "../../src/config/supabase.js";
 
-const seedParameters = async () => {
+export const seedParameters = async () => {
     try {
-        console.log("🔧 Starting Parameters seed...");
-
         const { data: configurations } = await supabase.from('configurations').select('configuration_id');
 
         if (!configurations?.length) {
@@ -18,10 +16,7 @@ const seedParameters = async () => {
 
         const { data, error } = await supabase.from('parameters').insert(parameters).select();
         if (error) throw error;
-        console.log(`✅ ${data.length} parameters synchronized.`);
     } catch (err) {
         console.error("❌ Error seed-parameters:", err.message);
     }
 };
-
-seedParameters();

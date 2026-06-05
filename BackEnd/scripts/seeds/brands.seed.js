@@ -1,9 +1,7 @@
 import { supabase } from "../../src/config/supabase.js";
 
-const seedBrands = async () => {
+export const seedBrands = async () => {
     try {
-        console.log("🏷️  Starting Brands seed...");
-
         const { error } = await supabase.from('brands').upsert([
             { brand_id: 1,  label: 'Tesla' },
             { brand_id: 2,  label: 'Renault' },
@@ -17,10 +15,7 @@ const seedBrands = async () => {
             { brand_id: 10, label: 'Audi' }
         ]);
         if (error) throw error;
-        console.log("✅ Brands synchronized.");
     } catch (err) {
         console.error("❌ Error seed-brands:", err.message);
     }
 };
-
-seedBrands();

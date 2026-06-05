@@ -2,10 +2,8 @@ import bcrypt from 'bcrypt';
 import { fakerFR as faker } from '@faker-js/faker'; 
 import { supabase } from "../../src/config/supabase.js";
 
-const seedUsers = async () => {
+export const seedUsers = async () => {
     try {
-        console.log("🚀 Starting Users seed...");
-        
         // Bcrypt generates a 60-character string
         const hashedPassword = await bcrypt.hash("Password123", 10);
 
@@ -21,8 +19,6 @@ const seedUsers = async () => {
         }
 
         const targetRoleId = roles[0].role_id;
-        console.log(`📡 Using Role ID: ${targetRoleId}`);
-
         const usersToInsert = Array.from({ length: 10 }).map(() => ({
             lastname: faker.person.lastName().substring(0, 45),
             firstname: faker.person.firstName().substring(0, 45),
@@ -34,8 +30,6 @@ const seedUsers = async () => {
             username: faker.internet.username().substring(0, 45),
             role_id: targetRoleId,
         }));
-
-        console.log(`📦 Sending ${usersToInsert.length} users to Supabase...`);
 
         const { data, error } = await supabase
             .from('users')
@@ -50,11 +44,7 @@ const seedUsers = async () => {
             return;
         }
 
-        console.log(`✅ Success: ${data.length} users created!`);
-
     } catch (err) {
         console.error("❌ Unexpected script error:", err.message);
     }
 };
-
-seedUsers();
