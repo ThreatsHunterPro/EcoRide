@@ -11,7 +11,7 @@ const tripsService = {
   searchTrips: async (from, to, date) => {
     try {
       const { data, error } = await supabase
-        .from('trip') // Table name from our seeds
+        .from('trips')
         .select(`
           trip_id,
           departure_date,
@@ -19,11 +19,9 @@ const tripsService = {
           departure_location,
           arrival_location,
           available_seats,
-          price,
-          car:car_id (model, energy, color),
-          driver:user_id (username, photo_url)
+          price
         `)
-        .ilike('departure_location', `%${from}%`) // More flexible search
+        .ilike('departure_location', `%${from}%`)
         .ilike('arrival_location', `%${to}%`)
         .eq('departure_date', date)
         .gt('available_seats', 0)
@@ -31,7 +29,6 @@ const tripsService = {
 
       if (error) throw error;
 
-      // Transform data for the frontend
       return data.map(trip => ({
         id: trip.trip_id,
         departure_date: trip.departure_date,
@@ -40,11 +37,10 @@ const tripsService = {
         to: trip.arrival_location,
         seats: trip.available_seats,
         price: trip.price,
-        car: trip.car,
-        driver: trip.driver,
-        // Business Logic: Electric cars = Ecological (US 3)
-        is_ecological: trip.car?.energy?.toLowerCase() === 'electric',
-        co2_saved: trip.car?.energy?.toLowerCase() === 'electric' ? 0.198 : 0 
+        car: null,
+        driver: null,
+        is_ecological: false,
+        co2_saved: 0 
       }));
 
     } catch (error) {
@@ -59,7 +55,7 @@ const tripsService = {
   findNextAvailableDate: async (from, to, currentDate) => {
     try {
       const { data, error } = await supabase
-        .from('trip')
+        .from('trips')
         .select('departure_date')
         .ilike('departure_location', `%${from}%`)
         .ilike('arrival_location', `%${to}%`)

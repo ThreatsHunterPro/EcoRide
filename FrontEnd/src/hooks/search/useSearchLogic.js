@@ -1,13 +1,15 @@
 import { useState } from "react";
 
 export function useSearchLogic() {
-    const [jobTitle, setJobTitle] = useState('');
-    const [location, setLocation] = useState('');
+    const [searchCriteria, setSearchCriteria] = useState({
+        departure: '',
+        destination: '',
+        departureDate: '',
+        returnDate: ''
+    });
 
     return {
-        jobTitle,
-        setJobTitle,
-        location,
-        setLocation
+        searchCriteria,
+        setSearchCriteria
     };
 }

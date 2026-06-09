@@ -1,14 +1,22 @@
 import { useState, useEffect, useMemo } from "react";
 import { useMultiStepForm } from "../shared/useMultiStepForm";
 import { useAuth } from "../../hooks/auth/useAuth";
+import { checkFieldAvailability } from "../../utils/api";
 
 export const useAuthSignupSteps = (onSubmit, setError, initialData = {}) => {
   const { register } = useAuth();
   const [rules, setRules] = useState(null);
 
-  const validateEmail = (value) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(value) ? null : "Adresse email invalide";
+  const validateUsername = async (value) => {
+    if (!value || value.length < 3) return "Pseudo trop court";
+    const exists = await checkFieldAvailability('username', value);
+    return exists ? "Ce pseudo est déjà utilisé" : null;
+  };
+
+  const validateEmail = async (value) => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Email invalide";
+    const exists = await checkFieldAvailability('email', value);
+    return exists ? "Cet email est déjà utilisé" : null;
   };
 
   const validatePassword = (value) => {
@@ -22,9 +30,9 @@ export const useAuthSignupSteps = (onSubmit, setError, initialData = {}) => {
   const steps = [
     { fields: [{ name: "firstname", placeholder: "Prénom", type: "text" }] },
     { fields: [{ name: "lastname", placeholder: "Nom", type: "text" }] },
+    { fields: [{ name: "username", placeholder: "Nom d'utilisateur", type: "text", validation: validateUsername }] },
     { fields: [{ name: "email", placeholder: "Email", type: "email", validation: validateEmail }] },
     { fields: [{ name: "password", placeholder: "Mot de passe", type: "password", validation: validatePassword }] },
-    { fields: [{ name: "username", placeholder: "Nom d'utilisateur", type: "text" }] },
   ];
 
   const formMethods = useMultiStepForm(

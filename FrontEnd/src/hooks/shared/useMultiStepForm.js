@@ -25,7 +25,7 @@ export function useMultiStepForm(initialSteps = [], initialData = {}, onSubmit, 
 
   const isEmpty = (val) => val === undefined || val === null || (typeof val === "string" && val.trim() === "");
 
-  const validateCurrentStep = () => {
+  const validateCurrentStep = async () => {
     if (!currentStep || !currentStep.fields) return null;
 
     for (const field of currentStep.fields) {
@@ -34,12 +34,11 @@ export function useMultiStepForm(initialSteps = [], initialData = {}, onSubmit, 
       const isRequired = field.required ?? currentStep.fields.length === 1;
 
       if (isRequired && isEmpty(value)) {
-        const label = field.label || field.placeholder || field.name;
-        return `${label} requis !`;
+        return `${field.placeholder} requis !`;
       }
 
       if (field.validation) {
-        const fieldError = field.validation(value);
+        const fieldError = await field.validation(value);
         if (fieldError) return fieldError;    
       }
     }
@@ -47,9 +46,8 @@ export function useMultiStepForm(initialSteps = [], initialData = {}, onSubmit, 
     return null;
   };
 
-  const handleNext = () => {
-    const validationError = validateCurrentStep();
-
+  const handleNext = async () => {
+    const validationError = await validateCurrentStep();
     if (validationError) {
       setError(validationError);  
       return false;    
@@ -61,8 +59,10 @@ export function useMultiStepForm(initialSteps = [], initialData = {}, onSubmit, 
   };
 
   const handleSubmit = async () => {
-    const validationError = validateCurrentStep();
+    const validationError = await validateCurrentStep();
+    
     if (validationError) {
+      console.log("Validation échouée :", validationError);
       setError(validationError);
       return;
     }
@@ -76,8 +76,9 @@ export function useMultiStepForm(initialSteps = [], initialData = {}, onSubmit, 
 
     try {
       if (onSubmit) await onSubmit(formData);
-    } catch (err) {
-      setError(err.message || "Une erreur est survenue");
+    } 
+    catch (err) {
+      setError(err?.message || "Une erreur inconnue est survenue");
     }
   };
 

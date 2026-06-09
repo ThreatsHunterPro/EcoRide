@@ -7,8 +7,14 @@ import errorMiddleware from "../middlewares/error.middleware.js";
 const app = express();
 
 // --- Middlewares ---
-// Si FRONTEND_URL n'est pas définie sur Render, on sécurise par un tableau vide.
-const allowedOrigins = process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [];
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173'  
+];
+
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+}
 
 app.use(cors({ 
     origin: allowedOrigins, 

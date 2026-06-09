@@ -1,12 +1,12 @@
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from "../../../hooks/auth/useAuth";
 
-function PrivateRoute({ expectedRoleId, children }) {
-  const { token, role_id, isLoading } = useAuth();
+export default function PrivateRoute({ expectedRoleId, children }) {
+  const { token, role_id, loading } = useAuth();
   const location = useLocation();
 
-  if (isLoading) {
-    return <div>Loading...</div>; 
+  if (loading) {
+    return <div style={{ color: 'black', padding: '20px' }}>Chargement ...</div>; 
   }
 
   if (!token) {
@@ -20,5 +20,3 @@ function PrivateRoute({ expectedRoleId, children }) {
 
   return children ? children : <Outlet />;
 }
-
-export default PrivateRoute;

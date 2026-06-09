@@ -39,18 +39,15 @@ const login = async (req, res) => {
   } 
   catch (err) {
     console.error('Auth Controller Error =>', err.message);
-    
-    // Handle specific status codes from our custom errors or default to 401
     const status = err.statusCode || 401;
     
     res.status(status).json({ 
       success: false,
-      error: 'Invalid credentials.' 
+      error: err.message || 'An unexpected error occurred.'
     });
   }
 };
 
-// Exporting with the key 'login' as expected by the dynamic router
 export default { 
   login 
 };

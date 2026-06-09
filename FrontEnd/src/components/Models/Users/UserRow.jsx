@@ -28,15 +28,6 @@ export default function UserRow({
 
       <TableCell>{user.firstname} {user.lastname}</TableCell>
       <TableCell className="break-words max-w-xs">{user.email || '-'}</TableCell>
-      <TableCell>
-        {user.registration_date
-          ? new Date(user.registration_date).toLocaleDateString(undefined, {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            })
-          : '-'}
-      </TableCell>
       <TableCell>{user.role || '-'}</TableCell>
       <TableCell>
         <div className="flex justify-end gap-3 text-gray-600">

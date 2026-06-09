@@ -5,7 +5,7 @@ const key = process.env.SUPABASE_SERVICE_KEY;
 
 if (!url || !key)
 {
-    throw new Error('Missing environment variables !');
+    throw new Error('Variables d\'environnement Supabase manquantes !');
 }
 
 export const supabase = createClient(url, key);

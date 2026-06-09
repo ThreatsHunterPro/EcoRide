@@ -23,7 +23,8 @@ export default function authMiddleware (req, res, next) {
       return res.status(403).json({ error: 'Session expired or invalid token.' });
     }
 
-    req.user = userPayload; 
+    // On s'assure que le contrôleur aura accès à l'ID
+    req.userId = userPayload.id; 
     next();
   });
 };
