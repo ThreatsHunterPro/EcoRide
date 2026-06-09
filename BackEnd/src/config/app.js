@@ -9,8 +9,9 @@ const app = express();
 // --- Middlewares ---
 const allowedOrigins = [
     'http://localhost:5173',
-    'http://127.0.0.1:5173'  
-];
+    'http://127.0.0.1:5173',
+    process.env.FRONTEND_URL
+].filter(Boolean)
 
 if (process.env.FRONTEND_URL) {
     allowedOrigins.push(process.env.FRONTEND_URL);

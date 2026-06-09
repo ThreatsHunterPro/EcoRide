@@ -99,12 +99,6 @@ export default function AccountPage() {
         body: JSON.stringify(payload)
       });
       
-      if (response.ok) {
-        alert("Profil et véhicule mis à jour avec succès !");
-      } else {
-        const errorData = await response.json();
-        alert("Erreur : " + errorData.error);
-      }
     } catch (err) {
       console.error("Erreur mise à jour :", err);
     }
