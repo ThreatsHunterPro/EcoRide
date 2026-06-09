@@ -33,11 +33,7 @@ export function useUsersSelection(users) {
     const user = users.find(u => u.user_id === userId);
     if (!user) return;
 
-    const registrationDate = user.registration_date
-      ? new Date(user.registration_date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
-      : 'date inconnue';
-
-    alert(`${user.firstname} ${user.lastname} : Inscrit(e) depuis ${registrationDate}`);
+    alert(`${user.firstname} ${user.lastname}`);
   }, [users]);
 
   const handleConsultSelected = useCallback(() => {

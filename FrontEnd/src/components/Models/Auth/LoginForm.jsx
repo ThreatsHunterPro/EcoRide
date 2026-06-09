@@ -20,22 +20,17 @@ export default function LoginForm({ setError }) {
 
     try {
       const userData = await login(credentials);
+      const roleId = Number(userData.user.role_id); 
 
-      if (userData.user.role === 'admin') {
-        navigate('/dashboard');
-      } 
-
-      else if (userData.user.role === 'user') {
-        navigate('/');
-      } 
-
-      else {
-        navigate('/');
+      if (roleId === 1) {
+        navigate('/admin/dashboard');
+      } else if (roleId === 2) {
+        navigate('/moderation/dashboard');
+      } else {
+        navigate('/', { replace: true });
       }
-    } 
-    
-   catch (err) {
-      setError(err.message === "Failed to fetch" ? "Une erreur est survenue" : err.message);
+    } catch (err) {
+      setError("Une erreur est survenue");
     }
   };
 

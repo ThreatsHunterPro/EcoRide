@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../../contexts/SearchContext';
 
+import CityInput from '../Shared/CityInput';
 import IconInput from "../Shared/IconInput";
 import DateInput from "../Shared/DateInput";
 import Button from "../Shared/Button";
@@ -10,6 +12,9 @@ import calendarIcon from "../../assets/calendar.png"
 
 export default function RideSearchBar() {
     const navigate = useNavigate();
+    const searchData = useContext(SearchContext);
+
+    const [formError, setFormError] = useState(null);
     const [departure, setDeparture] = useState("");
     const [destination, setDestination] = useState("");
     const [departureDate, setDepartureDate] = useState("");
@@ -34,13 +39,24 @@ export default function RideSearchBar() {
     };
 
     const handleClick = () => {
-        const params = new URLSearchParams({
-            departure,
-            destination,
-            departureDate,
-            returnDate
-        }).toString();
-        navigate(`/rides?${params}`);
+        setFormError(null); // Réinitialise l'erreur avant de vérifier
+
+        if (!departure || !destination) {
+            setFormError("Veuillez remplir les villes de départ et d'arrivée.");
+            return;
+        }
+        if (departure.toLowerCase() === destination.toLowerCase()) {
+            setFormError("Le départ et l'arrivée doivent être différents.");
+            return;
+        }
+
+        const criteria = { departure, destination, departureDate, returnDate };
+        if (searchData && searchData.setSearchCriteria) {
+            searchData.setSearchCriteria(criteria); 
+        }
+
+        const params = new URLSearchParams(criteria).toString();
+        navigate(`/trips?${params}`);
     };
 
     const rowStyle = "flex items-center rounded-xl border border-gray-200 hover:border-green-300 shadow-sm";
@@ -51,23 +67,27 @@ export default function RideSearchBar() {
         <div className="w-full bg-transparent p-2 flex flex-col gap-3">
             
             <div className="relative flex flex-col gap-2">
-                <IconInput
+                <CityInput
                     icon={pinIcon}
-                    name="departure"
+                    label="Départ"
                     placeholder="D'où partez-vous ?"
                     value={departure}
-                    onChange={(e) => setDeparture(e.target.value)}
+                    onChange={(val) => { setDeparture(val); setFormError(null); }}
+                    onEnter={handleClick}
+                    error={formError}
                     className={rowStyle}
                 />
                 
                 <SwapButton onSwap={handleSwitch}/>
                 
-                <IconInput
+                <CityInput
                     icon={pinIcon}
-                    name="destination"
+                    label="Arrivée"
                     placeholder="Où allez-vous ?"
                     value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
+                    onChange={(val) => { setDestination(val); setFormError(null); }}
+                    onEnter={handleClick}
+                    error={formError}
                     className={rowStyle}
                 />
             </div>
@@ -93,6 +113,12 @@ export default function RideSearchBar() {
                     onChange={(e) => setReturnDate(e.target.value)}
                 />
             </div>
+
+            {formError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl font-medium flex items-center shadow-sm animate-in fade-in duration-300">
+                    <span className="mr-2">⚠️</span> {formError}
+                </div>
+            )}
 
             <Button 
                 label="Rechercher"

@@ -2,9 +2,6 @@ import tripsService from "../services/trips.service.js";
 import Log from "../models/log.model.js";
 import { supabase } from "../config/supabase.js";
 
-/**
- * Create a new trip (US 3)
- */
 const create = async (req, res) => {
     try {
         const { 
@@ -46,7 +43,14 @@ const create = async (req, res) => {
  */
 const search = async (req, res) => {
     try {
-        const { from, to, date, ecoFilter, maxPrice, minRating } = req.query;
+        const { 
+            departure: from, 
+            destination: to, 
+            departureDate: date, 
+            ecoFilter, 
+            maxPrice, 
+            minRating 
+        } = req.query;
 
         // Validation
         if (!from || !to || !date) {

@@ -1,15 +1,18 @@
 import { supabase } from "../config/supabase.js";
 
 class User {
-  constructor({ user_id, firstname, lastname, email, password, username, role_id, registration_date }) {
+  constructor({ user_id, firstname, lastname, email, password, username, role_id, phone, address, birth_date, picture }) {
     this.user_id = user_id;
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
     this.password = password;
+    this.phone = phone;
+    this.address = address;
+    this.birth_date = birth_date;
+    this.picture = picture;
     this.username = username;
     this.role_id = role_id;
-    this.registration_date = registration_date;
   }
 
   /**
@@ -25,7 +28,6 @@ class User {
         password, 
         username, 
         role_id, 
-        registration_date: new Date() 
       }])
       .select()
       .single();
@@ -86,6 +88,18 @@ class User {
   toJSON() {
     const { password, ...safeData } = this;
     return safeData;
+  }
+
+  static async update(id, userData) {
+    const { data, error } = await supabase
+      .from('users')
+      .update(userData)
+      .eq('user_id', id)
+      .select('*')
+      .single();
+
+    if (error) throw error;
+    return new User(data);
   }
 }
 

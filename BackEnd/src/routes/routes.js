@@ -1,4 +1,6 @@
 import { authRoutes } from './auth.route.js';
+import { userRoutes } from './users.route.js';
+import { brandRoutes } from './brands.route.js';
 import { tripRoutes } from './trips.route.js';
 import { adminRoutes } from './admin.route.js';
 
@@ -10,6 +12,8 @@ const publicRoutes = [
 export const routesConfig = [
     ...publicRoutes,
     ...authRoutes,
+    ...userRoutes,
+    ...brandRoutes,
     ...tripRoutes,
     ...adminRoutes,
 ];

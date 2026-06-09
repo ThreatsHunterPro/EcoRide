@@ -31,11 +31,16 @@ export default function AuthPage() {
     setActiveTab(tab);
   }
 
+  const authTabs = [
+    { id: 'register', label: 'Inscription' },
+    { id: 'login', label: 'Connexion' }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-green-800">
       <div className="flex-1 flex items-center justify-center p-6">
         <div
-          className="bg-white rounded-xl shadow-lg p-12 w-full max-w-md transform scale-110"
+          className="relative bg-white rounded-xl shadow-lg p-12 w-full max-w-md transform scale-110"
           style={{ minHeight: "440px" }}
         >
           <Button
@@ -52,10 +57,7 @@ export default function AuthPage() {
               className="w-36 h-36 object-contain"
             />
             <div className="mt-[-32px] scale-110 text-xl">
-              <TabSwitcher 
-                activeTab={activeTab} 
-                onTabChange={handleTabChange}
-              />
+              <TabSwitcher activeTab={activeTab} onTabChange={setActiveTab} tabs={authTabs} />
             </div>
           </div>
 

@@ -1,13 +1,9 @@
 import { supabase } from "../config/supabase.js";
 
-/**
- * Get platform statistics for Admin (US 13)
- */
 const getStats = async (req, res) => {
     try {
-        // Example: count total trips
         const { count, error } = await supabase
-            .from('trip')
+            .from('trips')
             .select('*', { count: 'exact', head: true });
 
         if (error) throw error;

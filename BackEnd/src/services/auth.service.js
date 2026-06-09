@@ -22,7 +22,6 @@ export const verifyPassword = async (plainPassword, hashedPassword) => {
         throw new AuthenticationError('Invalid credentials.');
     }
 
-    // FIXED: Changed 'password' to 'plainPassword' to match function arguments
     if (!isStrongPassword(plainPassword)) {
         throw new AuthenticationError('Password is not strong enough.');
     }

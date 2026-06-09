@@ -1,21 +1,25 @@
 import { Link } from "react-router-dom";
 
-export default function LinkText({ link, children = "" }) {
+export default function LinkText({ link, children = "", className = "" }) {
 
-  const isMail = link.includes("@");
-  const isExternal = !isMail && (link.startsWith("http://") || link.startsWith("https://"));
-  const route = link.startsWith("/") ? link : `/${link}`;
+  const isMail = link?.includes("@");
+  const isExternal = !isMail && (link?.startsWith("http://") || link?.startsWith("https://"));
+  const route = link?.startsWith("/") ? link : `/${link}`;
 
-  const baseClasses = "ml-1 text-lg font-bold hover:underline";
-  const typeClasses = isMail ? "text-purple-900" : isExternal ? "text-blue-800" : "text-green-600";
+  const baseClasses = "font-bold hover:underline transition-colors";
+  
+  const typeClasses = isMail 
+    ? "text-gray-900 hover:text-[#1a8a3c]" 
+    : isExternal 
+      ? "text-blue-800" 
+      : "text-green-600";
+
+  const finalClasses = `${baseClasses} ${typeClasses} ${className}`.trim();
 
   if (isMail) {
     return (
-      <a
-        href={`mailto:${link}`}
-        className={`${baseClasses} ${typeClasses}`}
-      >
-        {link}
+      <a href={`mailto:${link}`} className={finalClasses}>
+        {children || link}
       </a>
     );
   }
@@ -23,19 +27,19 @@ export default function LinkText({ link, children = "" }) {
   if (isExternal) {
     return (
       <a
-        href={text}
+        href={link}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${baseClasses} ${typeClasses}`}
+        className={finalClasses}
       >
-        {children}
+        {children || link}
       </a>
     );
   }
 
   return (
-    <Link to={route} className={`${baseClasses} ${typeClasses}`}>
-      {children}
+    <Link to={route} className={finalClasses}>
+      {children || link}
     </Link>
   );
 }
