@@ -1,0 +1,144 @@
+
+<style>
+.sd-wrap{font-family:var(--font-sans);padding:0 0 8px}
+.sd-title{font-size:13px;font-weight:500;color:var(--color-text-primary);text-align:center;padding:12px 0 4px}
+.sd-legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;padding:8px 0 2px}
+.sd-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-text-secondary)}
+.sd-legend-line{width:30px;height:2px}
+.sd-legend-line.req{background:#1D9E75}
+.sd-legend-line.res{background:transparent;border-top:2px dashed var(--color-border-primary);height:0}
+.sd-legend-line.db{background:#BA7517}
+.sd-legend-line.err{background:#E24B4A}
+.sd-legend-line.log{background:#993C1D}
+</style>
+<div class="sd-wrap">
+<div class="sd-title">Participer à un covoiturage — US 6</div>
+<svg width="100%" viewBox="0 0 680 530" role="img">
+<title>Diagramme de séquence — Réservation EcoRide</title>
+<desc>Flux US6 : double confirmation, transaction SQL atomique, log MongoDB</desc>
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- Acteurs : Utilisateur=70, API=250, Supabase=450, MongoDB=610 -->
+<g class="c-teal"><rect x="10" y="8" width="120" height="34" rx="6" stroke-width="0.5"/><text class="th" x="70" y="25" text-anchor="middle" dominant-baseline="central">Utilisateur</text></g>
+<g class="c-purple"><rect x="190" y="8" width="120" height="34" rx="6" stroke-width="0.5"/><text class="th" x="250" y="25" text-anchor="middle" dominant-baseline="central">API Express</text></g>
+<g class="c-amber"><rect x="390" y="8" width="120" height="34" rx="6" stroke-width="0.5"/><text class="th" x="450" y="25" text-anchor="middle" dominant-baseline="central">Supabase</text></g>
+<g class="c-coral"><rect x="550" y="8" width="120" height="34" rx="6" stroke-width="0.5"/><text class="th" x="610" y="25" text-anchor="middle" dominant-baseline="central">MongoDB</text></g>
+
+<!-- Lifelines -->
+<line x1="70"  y1="42" x2="70"  y2="520" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="250" y1="42" x2="250" y2="520" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="450" y1="42" x2="450" y2="520" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="610" y1="42" x2="610" y2="520" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+
+<!-- 1 POST /bookings + JWT -->
+<line x1="70" y1="72" x2="242" y2="72" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="75" y="61" width="163" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="157" y="68" text-anchor="middle" dominant-baseline="central">POST /bookings  {trip_id} + JWT</text>
+
+<!-- middleware -->
+<rect x="218" y="80" width="64" height="20" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="250" y="90" text-anchor="middle" dominant-baseline="central">vérifie JWT</text>
+
+<!-- alt non connecté -->
+<rect x="190" y="106" width="20" height="14" rx="3" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="200" y="113" text-anchor="middle" dominant-baseline="central">alt</text>
+<line x1="190" y1="106" x2="660" y2="106" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="190" y1="132" x2="660" y2="132" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<line x1="190" y1="158" x2="660" y2="158" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="190" y1="106" x2="190" y2="158" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="660" y1="106" x2="660" y2="158" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+
+<text class="ts" x="216" y="120" style="fill:var(--color-text-tertiary)">[non connecté]</text>
+<line x1="242" y1="128" x2="78" y2="128" stroke="#E24B4A" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="83" y="117" width="155" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="160" y="124" text-anchor="middle" dominant-baseline="central">401  "Connectez-vous d'abord"</text>
+
+<text class="ts" x="216" y="147" style="fill:var(--color-text-tertiary)">[connecté]  → suite du flux</text>
+
+<!-- 2 SELECT trip + user -->
+<line x1="250" y1="174" x2="442" y2="174" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="255" y="163" width="183" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="346" y="170" text-anchor="middle" dominant-baseline="central">SELECT trip (seats, price) + user (credits)</text>
+
+<!-- 3 retour data -->
+<line x1="442" y1="190" x2="258" y2="190" stroke="var(--color-border-primary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="275" y="179" width="145" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="347" y="186" text-anchor="middle" dominant-baseline="central">trip + user row</text>
+
+<!-- vérifications -->
+<rect x="218" y="198" width="64" height="30" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="250" y="209" text-anchor="middle" dominant-baseline="central">seats &gt; 0 ?</text>
+<text class="ts" x="250" y="222" text-anchor="middle" dominant-baseline="central">credits ≥ price ?</text>
+
+<!-- alt conditions -->
+<rect x="190" y="234" width="20" height="14" rx="3" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="200" y="241" text-anchor="middle" dominant-baseline="central">alt</text>
+<line x1="190" y1="234" x2="660" y2="234" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="190" y1="260" x2="660" y2="260" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<line x1="190" y1="286" x2="660" y2="286" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="190" y1="234" x2="190" y2="286" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="660" y1="234" x2="660" y2="286" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+
+<text class="ts" x="216" y="248" style="fill:var(--color-text-tertiary)">[condition non remplie]</text>
+<line x1="242" y1="256" x2="78" y2="256" stroke="#E24B4A" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="83" y="245" width="155" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="160" y="252" text-anchor="middle" dominant-baseline="central">400  "Réservation impossible"</text>
+
+<text class="ts" x="216" y="275" style="fill:var(--color-text-tertiary)">[conditions OK]</text>
+<line x1="242" y1="282" x2="78" y2="282" stroke="var(--color-border-primary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="83" y="271" width="155" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="160" y="278" text-anchor="middle" dominant-baseline="central">200  {price, credits_après}  → modale</text>
+
+<!-- Double confirmation -->
+<line x1="70" y1="302" x2="242" y2="302" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="75" y="291" width="163" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="157" y="298" text-anchor="middle" dominant-baseline="central">POST /bookings/confirm  {trip_id}</text>
+
+<!-- transaction -->
+<rect x="218" y="310" width="64" height="20" rx="4" fill="var(--color-background-secondary)" stroke="#1D9E75" stroke-width="1"/>
+<text class="ts" x="250" y="320" text-anchor="middle" dominant-baseline="central" style="font-weight:500">Transaction SQL</text>
+
+<!-- 3 opérations SQL atomiques -->
+<line x1="250" y1="336" x2="442" y2="336" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="255" y="325" width="183" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="346" y="332" text-anchor="middle" dominant-baseline="central">UPDATE trip  SET seats = seats − 1</text>
+
+<line x1="250" y1="354" x2="442" y2="354" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="255" y="343" width="183" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="346" y="350" text-anchor="middle" dominant-baseline="central">UPDATE user  SET credits = credits − price</text>
+
+<line x1="250" y1="372" x2="442" y2="372" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="255" y="361" width="183" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="346" y="368" text-anchor="middle" dominant-baseline="central">INSERT booking  {user_id, trip_id, status='confirmed'}</text>
+
+<line x1="442" y1="388" x2="258" y2="388" stroke="var(--color-border-primary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="310" y="377" width="120" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="370" y="384" text-anchor="middle" dominant-baseline="central">OK  (commit)</text>
+
+<!-- log MongoDB -->
+<line x1="250" y1="406" x2="602" y2="406" stroke="#993C1D" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="255" y="395" width="343" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="427" y="402" text-anchor="middle" dominant-baseline="central">insertOne  {action:'booking', user_id, trip_id, timestamp}</text>
+
+<!-- 201 final -->
+<line x1="242" y1="424" x2="78" y2="424" stroke="var(--color-border-primary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="83" y="413" width="155" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="160" y="420" text-anchor="middle" dominant-baseline="central">201  {booking, credits_restants}</text>
+
+<!-- Note transaction -->
+<rect x="10" y="444" width="400" height="20" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="210" y="454" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-secondary)">Les 3 requêtes SQL sont atomiques — rollback complet si l'une échoue</text>
+</svg>
+
+<div class="sd-legend">
+  <div class="sd-legend-item"><div class="sd-legend-line req"></div>Requête HTTP</div>
+  <div class="sd-legend-item"><div class="sd-legend-line res"></div>Réponse HTTP</div>
+  <div class="sd-legend-item"><div class="sd-legend-line db"></div>Requête BDD</div>
+  <div class="sd-legend-item"><div class="sd-legend-line err"></div>Erreur</div>
+  <div class="sd-legend-item"><div class="sd-legend-line log"></div>Log MongoDB</div>
+</div>
+</div>

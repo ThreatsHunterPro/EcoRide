@@ -1,9 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-/**
- * Authentication Middleware
- * Checks JWT validity in request headers
- */
 export default function authMiddleware (req, res, next) {
   const authHeader = req.headers.authorization;
 
@@ -23,8 +19,8 @@ export default function authMiddleware (req, res, next) {
       return res.status(403).json({ error: 'Session expired or invalid token.' });
     }
 
-    // On s'assure que le contrôleur aura accès à l'ID
     req.userId = userPayload.id; 
     next();
   });
 };
+

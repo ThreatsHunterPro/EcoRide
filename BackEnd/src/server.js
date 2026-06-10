@@ -7,10 +7,6 @@ import { connectMongo } from "./config/mongo.js";
 const startServer = async () => {
   try {
 
-    console.log("--- DEBUG ENV ---");
-console.log("FRONTEND_URL trouvé :", process.env.FRONTEND_URL);
-console.log("-----------------");
-
     await connectMongo();
 
     const PORT = process.env.PORT || 3001;

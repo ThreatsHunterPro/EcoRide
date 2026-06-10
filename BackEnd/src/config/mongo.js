@@ -7,3 +7,4 @@ export const connectMongo = async () => {
     throw new Error(`Connexion MongoDB impossible : ${err.message}`);
   }
 };
+

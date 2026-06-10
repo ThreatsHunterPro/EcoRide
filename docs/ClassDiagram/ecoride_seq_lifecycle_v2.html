@@ -1,0 +1,146 @@
+
+<style>
+.sd-wrap{font-family:var(--font-sans);padding:0 0 8px}
+.sd-title{font-size:13px;font-weight:500;color:var(--color-text-primary);text-align:center;padding:12px 0 4px}
+.sd-legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;padding:8px 0 2px}
+.sd-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-text-secondary)}
+.sd-legend-line{width:28px;height:2px}
+.sd-legend-line.req{background:#1D9E75}
+.sd-legend-line.res{background:transparent;border-top:2px dashed var(--color-border-primary);height:0}
+.sd-legend-line.db{background:#BA7517}
+.sd-legend-line.err{background:#E24B4A}
+.sd-legend-line.mail{background:#993C1D}
+</style>
+<div class="sd-wrap">
+<div class="sd-title">Cycle de vie du covoiturage — US 11 &amp; 12</div>
+<svg width="100%" viewBox="0 0 680 600" role="img">
+<title>Diagramme de séquence — Cycle de vie EcoRide</title>
+<desc>Flux US11-12 : démarrage, arrivée, notification passager, validation OK/litige, crédits chauffeur, avis employé</desc>
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- Acteurs : Chauffeur=55, Passager=165, API=300, Supabase=440, Email=590
+     Largeurs acteurs serrées pour 5 colonnes dans 680px -->
+<g class="c-teal">  <rect x="5"   y="8" width="100" height="34" rx="6" stroke-width="0.5"/><text class="th" x="55"  y="25" text-anchor="middle" dominant-baseline="central">Chauffeur</text></g>
+<g class="c-blue">  <rect x="115" y="8" width="100" height="34" rx="6" stroke-width="0.5"/><text class="th" x="165" y="25" text-anchor="middle" dominant-baseline="central">Passager</text></g>
+<g class="c-purple"><rect x="240" y="8" width="120" height="34" rx="6" stroke-width="0.5"/><text class="th" x="300" y="25" text-anchor="middle" dominant-baseline="central">API Express</text></g>
+<g class="c-amber"> <rect x="375" y="8" width="110" height="34" rx="6" stroke-width="0.5"/><text class="th" x="430" y="25" text-anchor="middle" dominant-baseline="central">Supabase</text></g>
+<g class="c-coral">  <rect x="500" y="8" width="170" height="34" rx="6" stroke-width="0.5"/><text class="th" x="585" y="25" text-anchor="middle" dominant-baseline="central">Service email</text></g>
+
+<!-- Lifelines -->
+<line x1="55"  y1="42" x2="55"  y2="590" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="165" y1="42" x2="165" y2="590" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="300" y1="42" x2="300" y2="590" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="430" y1="42" x2="430" y2="590" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="585" y1="42" x2="585" y2="590" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+
+<!-- ─── DÉMARRAGE ─── -->
+<rect x="5" y="58" width="76" height="14" rx="3" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="43" y="65" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Démarrage</text>
+
+<line x1="55" y1="80" x2="292" y2="80" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="60" y="69" width="228" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="174" y="76" text-anchor="middle" dominant-baseline="central">PATCH /trips/:id  {status: 'in_progress'}</text>
+
+<line x1="300" y1="96" x2="422" y2="96" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="305" y="85" width="113" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="361" y="92" text-anchor="middle" dominant-baseline="central">UPDATE trip  status='in_progress'</text>
+
+<line x1="422" y1="112" x2="308" y2="112" stroke="var(--color-border-primary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<line x1="292" y1="122" x2="63"  y2="122" stroke="var(--color-border-primary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="68" y="111" width="220" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="178" y="118" text-anchor="middle" dominant-baseline="central">200 OK — bouton "Arrivée à destination" visible</text>
+
+<!-- ─── FIN DE TRAJET ─── -->
+<line x1="5" y1="140" x2="665" y2="140" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="2 4"/>
+<rect x="5" y="146" width="90" height="14" rx="3" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="50" y="153" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Fin de trajet</text>
+
+<line x1="55" y1="170" x2="292" y2="170" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="60" y="159" width="228" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="174" y="166" text-anchor="middle" dominant-baseline="central">PATCH /trips/:id  {status: 'completed'}</text>
+
+<line x1="300" y1="186" x2="422" y2="186" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="305" y="175" width="113" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="361" y="182" text-anchor="middle" dominant-baseline="central">UPDATE trip  status='completed'</text>
+
+<line x1="300" y1="202" x2="577" y2="202" stroke="#993C1D" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="305" y="191" width="268" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="439" y="198" text-anchor="middle" dominant-baseline="central">Envoi mail passager(s)  "Validez votre trajet"</text>
+
+<line x1="577" y1="218" x2="173" y2="218" stroke="#993C1D" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="178" y="207" width="395" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="375" y="214" text-anchor="middle" dominant-baseline="central">Mail reçu : "Indiquez si le trajet s'est bien déroulé"</text>
+
+<!-- ─── VALIDATION PASSAGER ─── -->
+<line x1="5" y1="236" x2="665" y2="236" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="2 4"/>
+<rect x="5" y="242" width="112" height="14" rx="3" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="61" y="249" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Validation passager</text>
+
+<rect x="240" y="260" width="20" height="14" rx="3" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="250" y="267" text-anchor="middle" dominant-baseline="central">alt</text>
+<line x1="240" y1="260" x2="665" y2="260" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="240" y1="340" x2="665" y2="340" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<line x1="240" y1="420" x2="665" y2="420" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="240" y1="260" x2="240" y2="420" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="665" y1="260" x2="665" y2="420" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+
+<!-- Branche OK -->
+<text class="ts" x="266" y="276" style="fill:var(--color-text-tertiary)">[trajet OK]</text>
+<line x1="165" y1="286" x2="292" y2="286" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="170" y="275" width="118" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="229" y="282" text-anchor="middle" dominant-baseline="central">POST /bookings/:id/validate  {ok:true, avis?, note?}</text>
+
+<line x1="300" y1="302" x2="422" y2="302" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="305" y="291" width="113" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="361" y="298" text-anchor="middle" dominant-baseline="central">UPDATE chauffeur  credits += (price−2)</text>
+
+<line x1="300" y1="318" x2="422" y2="318" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="305" y="307" width="113" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="361" y="314" text-anchor="middle" dominant-baseline="central">INSERT review  {status:'pending'}</text>
+
+<line x1="292" y1="333" x2="173" y2="333" stroke="var(--color-border-primary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="178" y="322" width="110" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="233" y="329" text-anchor="middle" dominant-baseline="central">200 OK  — avis en attente</text>
+
+<!-- Branche NOK -->
+<text class="ts" x="266" y="356" style="fill:var(--color-text-tertiary)">[trajet NOK — litige]</text>
+<line x1="165" y1="367" x2="292" y2="367" stroke="#E24B4A" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="170" y="356" width="118" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="229" y="363" text-anchor="middle" dominant-baseline="central">POST /bookings/:id/validate  {ok:false, comment}</text>
+
+<line x1="300" y1="383" x2="422" y2="383" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="305" y="372" width="113" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="361" y="379" text-anchor="middle" dominant-baseline="central">INSERT review  {status:'dispute'}</text>
+
+<rect x="263" y="394" width="170" height="20" rx="4" fill="var(--color-background-secondary)" stroke="#E24B4A" stroke-width="0.5"/>
+<text class="ts" x="348" y="404" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-danger)">Crédits chauffeur bloqués jusqu'à résolution</text>
+
+<!-- ─── VALIDATION EMPLOYÉ (US12) ─── -->
+<line x1="5" y1="432" x2="665" y2="432" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="2 4"/>
+<rect x="5" y="438" width="140" height="14" rx="3" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="75" y="445" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Validation avis — espace employé (US 12)</text>
+
+<line x1="300" y1="464" x2="422" y2="464" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="305" y="453" width="113" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="361" y="460" text-anchor="middle" dominant-baseline="central">UPDATE review  status='approved'/'rejected'</text>
+
+<line x1="422" y1="480" x2="308" y2="480" stroke="var(--color-border-primary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<rect x="313" y="469" width="105" height="14" rx="2" fill="var(--color-background-primary)"/>
+<text class="ts" x="365" y="476" text-anchor="middle" dominant-baseline="central">OK</text>
+
+<rect x="240" y="494" width="380" height="20" rx="4" fill="var(--color-background-secondary)" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="430" y="504" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-secondary)">Avis approuvé : visible sur profil du chauffeur · Crédits litige débloqués si litige résolu</text>
+</svg>
+
+<div class="sd-legend">
+  <div class="sd-legend-item"><div class="sd-legend-line req"></div>Requête HTTP</div>
+  <div class="sd-legend-item"><div class="sd-legend-line res"></div>Réponse HTTP</div>
+  <div class="sd-legend-item"><div class="sd-legend-line db"></div>Requête BDD</div>
+  <div class="sd-legend-item"><div class="sd-legend-line err"></div>Erreur / litige</div>
+  <div class="sd-legend-item"><div class="sd-legend-line mail"></div>Email</div>
+</div>
+</div>
