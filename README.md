@@ -85,7 +85,7 @@ Depuis le dossier `/BackEnd` :
 
 | Commande | Description |
 |---|---|
-| `npm run seed:all` | Remplit toutes les tables dans le bon ordre |
+| `npm run db:master` | Remplit toutes les tables dans le bon ordre |
 | `npm run db:clear` | Vide toutes les tables |
 | `npm run db:count` | Affiche le nombre de lignes par table |
 
